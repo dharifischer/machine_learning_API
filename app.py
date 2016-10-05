@@ -29,7 +29,6 @@ clf = None
 
 nav.Bar('top', [
     nav.Item('Home', 'index'),
-    nav.Item('Predict', 'predict'),
     nav.Item('Train', 'train'),
     nav.Item('Wipe', 'wipe')
 ])
@@ -113,7 +112,7 @@ def wipe():
     try:
         shutil.rmtree('model')
         os.makedirs(model_directory)
-        return 'Model wiped'
+        return render_template('wipe.html')
 
     except Exception, e:
         print str(e)
