@@ -7,10 +7,12 @@ import json
 
 
 from flask import Flask, request, jsonify, url_for, render_template
+from flask.ext.navigation import Navigation
 import pandas as pd
 from sklearn.externals import joblib
 
 app = Flask(__name__)
+nav = Navigation(app)
 
 # inputs
 training_data = 'data/titanic_train.csv'
@@ -21,15 +23,19 @@ model_directory = 'model'
 model_file_name = '%s/model.pkl' % model_directory
 model_columns_file_name = '%s/model_columns.pkl' % model_directory
 
-
 # These will be populated at training time
 model_columns = None
 clf = None
 
-
+nav.Bar('top', [
+    nav.Item('Home', 'index'),
+    nav.Item('Predict', 'predict'),
+    nav.Item('Train', 'train'),
+    nav.Item('Wipe', 'wipe')
+])
 @app.route('/')
 def index():
-    return render_template('post_data.html')
+    return render_template('index.html')
 
 
 @app.route('/predict', methods=['POST', 'GET'])
@@ -49,7 +55,6 @@ def predict():
 
             prediction = list(model.predict(query))
             #return jsonify({'prediction': prediction})
-
             return render_template('prediction.html', preds = prediction)
 
         except Exception, e:
@@ -97,7 +102,10 @@ def train():
 
     joblib.dump(clf, model_file_name)
 
-    return 'Success'
+    status = 'Success'
+    estimators = clf.n_estimators
+
+    return render_template('train.html', status = status, estimators = estimators)
 
 
 @app.route('/wipe', methods=['GET'])
@@ -129,5 +137,7 @@ if __name__ == '__main__':
         print 'Train first'
         print str(e)
         clf = None
+
+
 
     app.run(port=port, debug=True)
