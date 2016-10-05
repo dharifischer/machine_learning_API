@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>POST Data
+  </head>
+  <body>
+    <ul>
+    {% for item in nav.top %}
+    <li class="{{ 'active' if item.is_active else '' }}">
+        <a href="{{ item.url }}">{{ item.label }}</a>
+    </li>
+    {% endfor %}
+</ul>
+
+
+    <div class="container">
+      <div class="header">
+        <h3 class="text-muted">POST the Sample Data</h3>
+      </div>
+      <hr/>
+      <div>
+      <form action="predict" method="post">
+        <textarea cols="60" rows="8" name="jsondata">{
+          "test": [
+              {"Age": 85, "Sex": "male", "Embarked": "S"},
+              {"Age": 24, "Sex": "female", "Embarked": "C"},
+              {"Age": 3, "Sex": "male", "Embarked": "C"},
+              {"Age": 21, "Sex": "male", "Embarked": "S"}
+              ]
+            }
+    </textarea><br /><br />
+        <input type="submit" value="Send">
+      </form>
+      </div>
+    </div>
+  </body>
+</html>

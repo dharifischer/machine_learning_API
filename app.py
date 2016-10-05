@@ -112,7 +112,7 @@ def wipe():
     try:
         shutil.rmtree('model')
         os.makedirs(model_directory)
-        return render_template('wipe.html')
+        return render_template('wipe.html', preds = prediction)
 
     except Exception, e:
         print str(e)
