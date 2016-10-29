@@ -32,6 +32,7 @@ nav.Bar('top', [
     nav.Item('Train', 'train'),
     nav.Item('Wipe', 'wipe')
 ])
+
 @app.route('/')
 def index():
     return render_template('index.html')
