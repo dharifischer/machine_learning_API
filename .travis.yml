@@ -1,0 +1,4 @@
+language: python
+python: 
+- 1.0
+script: python app.py
