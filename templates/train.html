@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>POST Data
+  </head>
+  <body>
+    <ul>
+    {% for item in nav.top %}
+    <li class="{{ 'active' if item.is_active else '' }}">
+        <a href="{{ item.url }}">{{ item.label }}</a>
+    </li>
+    {% endfor %}
+</ul>
+
+    <h4>{{status}}</h4>
+    <p>Trained a Random Forest with {{estimators}}</p>
+  </body>
+</html>

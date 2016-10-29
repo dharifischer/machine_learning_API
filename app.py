@@ -36,12 +36,37 @@ nav.Bar('top', [
 def index():
     return render_template('index.html')
 
+@app.route('/predict_terminal', methods=['POST', 'GET'])
+def predict_terminal():
+    if os.listdir(model_directory) != []:
+            json_ = json.dumps(request.json)
+            json_ = json.loads(json_)
 
-@app.route('/predict', methods=['POST', 'GET'])
-def predict():
+            query = pd.get_dummies(pd.DataFrame(json_['test']))
+
+            for col in model_columns:
+                if col not in query.columns:
+                    query[col] = 0
+
+            model = joblib.load(model_file_name)
+
+            prediction = list(model.predict(query))
+            #return jsonify({'prediction': prediction})
+            f = open('output.txt', 'w')
+            for pred  in prediction:
+                f.write('%s\n' %pred)
+            f.close()
+            return render_template('prediction.html', preds = prediction)
+
+    else:
+        print 'train first'
+        return 'no model here'
+
+
+@app.route('/predict_form', methods=['POST', 'GET'])
+def predict_form():
     if os.listdir(model_directory) != []:
         try:
-
             jsondata = request.form['jsondata']
             json_ = json.loads(jsondata)
             query = pd.get_dummies(pd.DataFrame(json_['test']))
@@ -99,7 +124,7 @@ def train():
     print 'Trained in %.1f seconds' % (time.time() - start)
     print 'Model training score: %s' % clf.score(x, y)
 
-    joblib.dump(clf, model_file_name)
+    joblib.dump(clf, model_file_name, compress = 1)
 
     status = 'Success'
     estimators = clf.n_estimators
